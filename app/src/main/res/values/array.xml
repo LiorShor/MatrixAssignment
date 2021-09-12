@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="data_array">
+        <item>Top to bottom</item>
+        <item>Bottom to Top</item>
+    </string-array>
+
+</resources>
