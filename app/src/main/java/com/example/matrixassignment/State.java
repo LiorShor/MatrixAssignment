@@ -3,37 +3,43 @@ package com.example.matrixassignment;
 import java.io.Serializable;
 
 public class State implements Serializable {
-    private final String name;
-    private final String nativeName;
-    private final double area;
-    private final String[] borders;
-    private final String flagUrl;
+    private final String mName;
+    private final String mNativeName;
+    private final double mArea;
+    private final String[] mBorders;
+    private final String mFlagURL;
+    private final String mCode;
 
-    public State(String name, String nativeName, double area, String[] borders, String flagURL) {
-        this.name = name;
-        this.nativeName = nativeName;
-        this.area = area;
-        this.borders = borders;
-        this.flagUrl = flagURL;
+    public State(String name, String nativeName, double area, String[] borders, String flagURL,String code) {
+        this.mName = name;
+        this.mNativeName = nativeName;
+        this.mArea = area;
+        this.mBorders = borders;
+        this.mFlagURL = flagURL;
+        this.mCode = code;
     }
 
     public String getName() {
-        return name;
+        return mName;
     }
 
-    public String getFlagUrl() {
-        return flagUrl;
+    public String getFlagURL() {
+        return mFlagURL;
     }
 
     public String getNativeName() {
-        return nativeName;
+        return mNativeName;
     }
 
     public double getArea() {
-        return area;
+        return mArea;
     }
 
     public String[] getBorders() {
-        return borders;
+        return mBorders;
+    }
+
+    public String getCode() {
+        return mCode;
     }
 }

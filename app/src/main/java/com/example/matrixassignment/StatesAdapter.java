@@ -8,18 +8,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.GenericRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.model.StreamEncoder;
 import com.bumptech.glide.load.resource.file.FileToStreamDecoder;
 import com.caverock.androidsvg.SVG;
-
 import java.io.InputStream;
 import java.util.List;
 
@@ -57,14 +55,16 @@ public class StatesAdapter extends RecyclerView.Adapter<StatesAdapter.ViewHolder
                 .listener(new SvgSoftwareLayerSetter<>());
 
         requestBuilder.diskCacheStrategy(DiskCacheStrategy.NONE)
-                .load(Uri.parse(mStatesArray.get( holder.getAdapterPosition()).getFlagUrl()))
+                .load(Uri.parse(mStatesArray.get( holder.getAdapterPosition()).getFlagURL()))
                 .into(holder.mStateFlagImageView);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
+        holder.itemView.setOnClickListener(v -> {
+            if(mStatesArray.get( holder.getAdapterPosition()).getBorders().length > 0) {
                 MainActivity mainActivity = (MainActivity) mFragmentActivity;
-                mainActivity.loadStateDetails(mStatesArray.get(holder.getAdapterPosition()));
+                mainActivity.loadStateDetails(mStatesArray.get(holder.getAdapterPosition()), mStatesArray);
+            }
+            else
+            {
+                Toast.makeText(mContext,"Country without borders" , Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="data_array">
-        <item>Top to bottom</item>
-        <item>Bottom to Top</item>
+        <item>Select an Option…</item>
+        <item>Ascending order</item>
+        <item>Descending order</item>
     </string-array>
 
 </resources>
