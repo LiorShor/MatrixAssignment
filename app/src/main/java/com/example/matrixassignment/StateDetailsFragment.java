@@ -32,7 +32,7 @@ public class StateDetailsFragment extends Fragment {
             mStatesArrayList = (ArrayList<State>) bundle.getSerializable("StatesList");
         }
         for (String codeState: mState.getBorders()) {
-            mBorderStates.add(mStatesArrayList.stream().filter(state -> state.getCode().equals(codeState)).findFirst().orElse(null));
+            mBorderStates.add(mStatesArrayList.stream().filter(state -> state.getAlpha3Code().equals(codeState)).findFirst().orElse(null));
         }
     }
 

@@ -1,5 +1,7 @@
 package com.example.matrixassignment;
 
+import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -24,6 +26,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class StateListFragment extends Fragment {
@@ -54,6 +57,7 @@ public class StateListFragment extends Fragment {
         stateAreaSpinner.setAdapter(adapter);
 
         stateNameSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 if (position == 1) {
@@ -70,6 +74,7 @@ public class StateListFragment extends Fragment {
             }
         });
         stateAreaSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 if (position == 1) {
@@ -98,7 +103,9 @@ public class StateListFragment extends Fragment {
     }
 
     private void sortByAreaAscending() {
-        Collections.sort(mStatesArrayList, (l1, l2) -> Double.compare(l1.getArea(), l2.getArea()));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Collections.sort(mStatesArrayList, Comparator.comparingDouble(State::getArea));
+        }
     }
 
     private void sortByNameDescending() {
@@ -106,13 +113,15 @@ public class StateListFragment extends Fragment {
     }
 
     private void sortByNameAscending() {
-        Collections.sort(mStatesArrayList, (l1, l2) -> l1.getName().compareTo(l2.getName()));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Collections.sort(mStatesArrayList, Comparator.comparing(State::getName));
+        }
     }
 
     private void fetchData() {
-        String url = "https://restcountries.eu/rest/v2/all?fields=name;nativeName;flag;area;borders;alpha3Code";
+        String url = "https://restcountries.eu/rest/v2/all?fields=name;nativeName;flag;area;borders;alpha3Code;alpha2Code";
         mStatesArrayList.clear();
-        JsonArrayRequest jsonObjectRequest = new JsonArrayRequest(Request.Method.GET, url, null, response ->
+        @SuppressLint("NotifyDataSetChanged") JsonArrayRequest jsonObjectRequest = new JsonArrayRequest(Request.Method.GET, url, null, response ->
         {
             for (int i = 0; i < response.length(); i++) {
                 try {
@@ -121,7 +130,8 @@ public class StateListFragment extends Fragment {
                     String stateName = jsonObject.getString("name");
                     String stateNativeName = jsonObject.getString("nativeName");
                     String stateFlag = jsonObject.getString("flag");
-                    String stateCode = jsonObject.getString("alpha3Code");
+                    String state3Code = jsonObject.getString("alpha3Code");
+                    String state2Code = jsonObject.getString("alpha2Code");
                     JSONArray stateBordersJSONArray = jsonObject.getJSONArray("borders");
                     String[] stateBorders = new String[stateBordersJSONArray.length()];
                     for (int j = 0; j < stateBorders.length; j++) {
@@ -132,7 +142,7 @@ public class StateListFragment extends Fragment {
                     } catch (JSONException e) {
                         stateArea = 0;
                     }
-                    mStatesArrayList.add(new State(stateName, stateNativeName, stateArea, stateBorders, stateFlag, stateCode));
+                    mStatesArrayList.add(new State(stateName, stateNativeName, stateArea, stateBorders, stateFlag, state3Code, state2Code));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

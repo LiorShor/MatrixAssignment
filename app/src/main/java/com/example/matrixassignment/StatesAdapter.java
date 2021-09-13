@@ -1,24 +1,19 @@
 package com.example.matrixassignment;
 
 import android.content.Context;
-import android.graphics.drawable.PictureDrawable;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
-import com.bumptech.glide.GenericRequestBuilder;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.model.StreamEncoder;
-import com.bumptech.glide.load.resource.file.FileToStreamDecoder;
-import com.caverock.androidsvg.SVG;
-import java.io.InputStream;
+
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 public class StatesAdapter extends RecyclerView.Adapter<StatesAdapter.ViewHolder> {
@@ -26,7 +21,7 @@ public class StatesAdapter extends RecyclerView.Adapter<StatesAdapter.ViewHolder
     private final List<State> mStatesArray;
     private final FragmentActivity mFragmentActivity;
 
-    public StatesAdapter(FragmentActivity iFragmentActivity,Context iContext, List<State> iStatesArrayList) {
+    public StatesAdapter(FragmentActivity iFragmentActivity, Context iContext, List<State> iStatesArrayList) {
         this.mStatesArray = iStatesArrayList;
         this.mContext = iContext;
         this.mFragmentActivity = iFragmentActivity;
@@ -41,30 +36,18 @@ public class StatesAdapter extends RecyclerView.Adapter<StatesAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull StatesAdapter.ViewHolder holder, int position) {
-        holder.mStateNameTextView.setText(mStatesArray.get( holder.getAdapterPosition()).getName());
-        holder.mStateNativeNameTextView.setText(mStatesArray.get( holder.getAdapterPosition()).getNativeName());
-        holder.mStateAreaTextView.setText(String.valueOf(mStatesArray.get( holder.getAdapterPosition()).getArea()));
-        GenericRequestBuilder<Uri, InputStream, SVG, PictureDrawable> requestBuilder = Glide.with(mContext)
-                .using(Glide.buildStreamModelLoader(Uri.class, mContext), InputStream.class)
-                .from(Uri.class)
-                .as(SVG.class)
-                .transcode(new SvgDrawableTranscoder(), PictureDrawable.class)
-                .sourceEncoder(new StreamEncoder())
-                .cacheDecoder(new FileToStreamDecoder<>(new SvgDecoder()))
-                .decoder(new SvgDecoder())
-                .listener(new SvgSoftwareLayerSetter<>());
-
-        requestBuilder.diskCacheStrategy(DiskCacheStrategy.NONE)
-                .load(Uri.parse(mStatesArray.get( holder.getAdapterPosition()).getFlagURL()))
-                .into(holder.mStateFlagImageView);
+        State state = mStatesArray.get(holder.getAdapterPosition());
+        holder.mStateNameTextView.setText(state.getName());
+        holder.mStateNativeNameTextView.setText(state.getNativeName());
+        holder.mStateAreaTextView.setText(String.valueOf(state.getArea()));
+        String COUNTRIES_FLAGS_URL = "https://raw.githubusercontent.com/hampusborgos/country-flags/main/png250px/";
+        Picasso.get().load(COUNTRIES_FLAGS_URL + state.getAlpha2Code().toLowerCase() + ".png").resize(90, 90).centerCrop().into(holder.mStateFlagImageView);
         holder.itemView.setOnClickListener(v -> {
-            if(mStatesArray.get( holder.getAdapterPosition()).getBorders().length > 0) {
+            if (mStatesArray.get(holder.getAdapterPosition()).getBorders().length > 0) {
                 MainActivity mainActivity = (MainActivity) mFragmentActivity;
                 mainActivity.loadStateDetails(mStatesArray.get(holder.getAdapterPosition()), mStatesArray);
-            }
-            else
-            {
-                Toast.makeText(mContext,"Country without borders" , Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(mContext, "Country without borders", Toast.LENGTH_SHORT).show();
             }
         });
 
