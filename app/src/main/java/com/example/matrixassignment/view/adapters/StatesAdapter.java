@@ -9,12 +9,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.matrixassignment.R;
 import com.example.matrixassignment.data.models.State;
-import com.example.matrixassignment.view.activities.MainActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -22,12 +20,12 @@ import java.util.List;
 public class StatesAdapter extends RecyclerView.Adapter<StatesAdapter.ViewHolder> {
     private final Context mContext;
     private final List<State> mStatesArray;
-    private final FragmentActivity mFragmentActivity;
+    private final IStateSelectionObserver stateSelectionObserver;
 
-    public StatesAdapter(FragmentActivity iFragmentActivity, Context iContext, List<State> iStatesArrayList) {
+    public StatesAdapter(IStateSelectionObserver iStateSelectionObserver, Context iContext, List<State> iStatesArrayList) {
         this.mStatesArray = iStatesArrayList;
         this.mContext = iContext;
-        this.mFragmentActivity = iFragmentActivity;
+        this.stateSelectionObserver = iStateSelectionObserver;
     }
 
     @NonNull
@@ -44,11 +42,10 @@ public class StatesAdapter extends RecyclerView.Adapter<StatesAdapter.ViewHolder
         holder.mStateNameTextView.setText(state.getName());
         holder.mStateNativeNameTextView.setText(state.getNativeName());
         holder.mStateAreaTextView.setText(String.valueOf(state.getArea()));
-        Picasso.get().load(COUNTRIES_FLAGS_URL + state.getAlpha2Code().toLowerCase() + ".png").resize(90, 90).centerCrop().into(holder.mStateFlagImageView);
+        Picasso.get().load(COUNTRIES_FLAGS_URL + state.getAlpha2Code().toLowerCase() + ".png").resize(85, 85).centerCrop().into(holder.mStateFlagImageView);
         holder.itemView.setOnClickListener(v -> {
             if (state.getBorders().length > 0) {
-                MainActivity mainActivity = (MainActivity) mFragmentActivity;
-                mainActivity.loadStateDetails(state);
+                stateSelectionObserver.onStateSelected(state.getAlpha3Code());
             } else {
                 Toast.makeText(mContext, "Country without borders", Toast.LENGTH_SHORT).show();
             }
@@ -59,6 +56,7 @@ public class StatesAdapter extends RecyclerView.Adapter<StatesAdapter.ViewHolder
     public int getItemCount() {
         return mStatesArray.size();
     }
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView mStateNameTextView;

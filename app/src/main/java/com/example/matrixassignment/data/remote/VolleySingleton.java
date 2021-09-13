@@ -1,7 +1,6 @@
 package com.example.matrixassignment.data.remote;
 
 import android.content.Context;
-
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
@@ -21,7 +20,6 @@ public class VolleySingleton {
 
         return mInstance;
     }
-
     public RequestQueue getRequestQueue(){
         return mRequestQueue;
     }
