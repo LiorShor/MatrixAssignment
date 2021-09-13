@@ -9,9 +9,6 @@ import com.example.matrixassignment.view.fragments.StateDetailsFragment;
 import com.example.matrixassignment.view.fragments.StateListFragment;
 import com.example.matrixassignment.data.models.State;
 
-import java.io.Serializable;
-import java.util.List;
-
 public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,11 +21,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void loadStateDetails(State state, List<State> statesList) {
+    public void loadStateDetails(State state) {
         Bundle bundle = new Bundle();
         Fragment fragment = new StateDetailsFragment();
         bundle.putSerializable("State", state);
-        bundle.putSerializable("StatesList", (Serializable) statesList);
         fragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).addToBackStack(null).commit();
     }

@@ -48,7 +48,7 @@ public class StatesAdapter extends RecyclerView.Adapter<StatesAdapter.ViewHolder
         holder.itemView.setOnClickListener(v -> {
             if (state.getBorders().length > 0) {
                 MainActivity mainActivity = (MainActivity) mFragmentActivity;
-                mainActivity.loadStateDetails(state, mStatesArray);
+                mainActivity.loadStateDetails(state);
             } else {
                 Toast.makeText(mContext, "Country without borders", Toast.LENGTH_SHORT).show();
             }

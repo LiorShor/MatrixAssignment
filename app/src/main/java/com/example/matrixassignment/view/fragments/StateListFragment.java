@@ -20,6 +20,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.example.matrixassignment.R;
+import com.example.matrixassignment.data.remote.StateListSingleton;
 import com.example.matrixassignment.data.remote.VolleySingleton;
 import com.example.matrixassignment.data.models.State;
 import com.example.matrixassignment.view.adapters.StatesAdapter;
@@ -31,15 +32,14 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 public class StateListFragment extends Fragment {
-    private final List<State> mStatesArrayList;
+    private final ArrayList<State> mAllStateList;
     private RequestQueue mRequestQueue;
     private StatesAdapter mAdapter;
 
     public StateListFragment() {
-        mStatesArrayList = new ArrayList<>();
+        mAllStateList = StateListSingleton.getInstance().getArray();
     }
 
     @Override
@@ -95,7 +95,7 @@ public class StateListFragment extends Fragment {
             }
         });
         RecyclerView stateRecyclerView = view.findViewById(R.id.statesRecyclerView);
-        mAdapter = new StatesAdapter(getActivity(), getContext(), mStatesArrayList);
+        mAdapter = new StatesAdapter(getActivity(), getContext(), mAllStateList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         stateRecyclerView.setAdapter(mAdapter);
         stateRecyclerView.setLayoutManager(linearLayoutManager);
@@ -103,27 +103,29 @@ public class StateListFragment extends Fragment {
     }
 
     private void sortByAreaDescending() {
-        Collections.sort(mStatesArrayList, (l1, l2) -> Double.compare(l2.getArea(), l1.getArea()));
+        Collections.sort(mAllStateList, (l1, l2) -> Double.compare(l2.getArea(), l1.getArea()));
     }
 
     private void sortByAreaAscending() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Collections.sort(mStatesArrayList, Comparator.comparingDouble(State::getArea));
+            Collections.sort(mAllStateList, Comparator.comparingDouble(State::getArea));
         }
     }
 
     private void sortByNameDescending() {
-        Collections.sort(mStatesArrayList, (l1, l2) -> l2.getName().compareTo(l1.getName()));
+        Collections.sort(mAllStateList, (l1, l2) -> l2.getName().compareTo(l1.getName()));
     }
 
     private void sortByNameAscending() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Collections.sort(mStatesArrayList, Comparator.comparing(State::getName));
+            Collections.sort(mAllStateList, Comparator.comparing(State::getName));
         }
     }
+
     private void fetchData() {
         String url = "https://restcountries.eu/rest/v2/all?fields=name;nativeName;flag;area;borders;alpha3Code;alpha2Code";
-        mStatesArrayList.clear();
+        mAllStateList.clear();
+
         @SuppressLint("NotifyDataSetChanged") JsonArrayRequest jsonObjectRequest = new JsonArrayRequest(Request.Method.GET, url, null, response ->
         {
             for (int i = 0; i < response.length(); i++) {
@@ -145,7 +147,7 @@ public class StateListFragment extends Fragment {
                     } catch (JSONException e) {
                         stateArea = 0;
                     }
-                    mStatesArrayList.add(new State(stateName, stateNativeName, stateArea, stateBorders, stateFlag, state3Code, state2Code));
+                    mAllStateList.add(new State(stateName, stateNativeName, stateArea, stateBorders, stateFlag, state3Code, state2Code));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
