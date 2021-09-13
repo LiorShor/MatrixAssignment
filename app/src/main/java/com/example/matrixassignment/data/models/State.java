@@ -1,4 +1,4 @@
-package com.example.matrixassignment;
+package com.example.matrixassignment.data.models;
 
 import java.io.Serializable;
 

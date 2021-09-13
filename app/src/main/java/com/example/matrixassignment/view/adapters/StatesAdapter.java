@@ -1,4 +1,4 @@
-package com.example.matrixassignment;
+package com.example.matrixassignment.view.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,6 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.matrixassignment.R;
+import com.example.matrixassignment.data.models.State;
+import com.example.matrixassignment.view.activities.MainActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -36,21 +39,20 @@ public class StatesAdapter extends RecyclerView.Adapter<StatesAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull StatesAdapter.ViewHolder holder, int position) {
+        String COUNTRIES_FLAGS_URL = "https://raw.githubusercontent.com/hampusborgos/country-flags/main/png250px/";
         State state = mStatesArray.get(holder.getAdapterPosition());
         holder.mStateNameTextView.setText(state.getName());
         holder.mStateNativeNameTextView.setText(state.getNativeName());
         holder.mStateAreaTextView.setText(String.valueOf(state.getArea()));
-        String COUNTRIES_FLAGS_URL = "https://raw.githubusercontent.com/hampusborgos/country-flags/main/png250px/";
         Picasso.get().load(COUNTRIES_FLAGS_URL + state.getAlpha2Code().toLowerCase() + ".png").resize(90, 90).centerCrop().into(holder.mStateFlagImageView);
         holder.itemView.setOnClickListener(v -> {
-            if (mStatesArray.get(holder.getAdapterPosition()).getBorders().length > 0) {
+            if (state.getBorders().length > 0) {
                 MainActivity mainActivity = (MainActivity) mFragmentActivity;
-                mainActivity.loadStateDetails(mStatesArray.get(holder.getAdapterPosition()), mStatesArray);
+                mainActivity.loadStateDetails(state, mStatesArray);
             } else {
                 Toast.makeText(mContext, "Country without borders", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     @Override
@@ -71,6 +73,5 @@ public class StatesAdapter extends RecyclerView.Adapter<StatesAdapter.ViewHolder
             mStateAreaTextView = itemView.findViewById(R.id.stateAreaTextView);
             mStateFlagImageView = itemView.findViewById(R.id.stateFlagImageView);
         }
-
     }
 }

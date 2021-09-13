@@ -1,4 +1,4 @@
-package com.example.matrixassignment;
+package com.example.matrixassignment.view.fragments;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -9,6 +9,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.matrixassignment.R;
+import com.example.matrixassignment.data.models.State;
+import com.example.matrixassignment.view.adapters.StatesAdapter;
+
 import java.util.ArrayList;
 import java.util.List;
 

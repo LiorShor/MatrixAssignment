@@ -1,4 +1,4 @@
-package com.example.matrixassignment;
+package com.example.matrixassignment.view.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Build;
@@ -19,6 +19,10 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.example.matrixassignment.R;
+import com.example.matrixassignment.data.remote.VolleySingleton;
+import com.example.matrixassignment.data.models.State;
+import com.example.matrixassignment.view.adapters.StatesAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -117,7 +121,6 @@ public class StateListFragment extends Fragment {
             Collections.sort(mStatesArrayList, Comparator.comparing(State::getName));
         }
     }
-
     private void fetchData() {
         String url = "https://restcountries.eu/rest/v2/all?fields=name;nativeName;flag;area;borders;alpha3Code;alpha2Code";
         mStatesArrayList.clear();
